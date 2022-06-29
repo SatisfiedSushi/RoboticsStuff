@@ -6,54 +6,52 @@ package frc.robot.subsystems;
 
 import java.io.*;
 import java.lang.reflect.Method;
+import edu.wpi.first.wpilibj.Joystick;
+import javax.swing.tree.ExpandVetoException;
+
 import java.lang.Thread;
 
+import frc.robot.UserInput;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
-import frc.robot.Constants;
+import frc.robot.RobotSettings;
+import frc.robot.UserInput;
+import frc.robot.commands.ExampleCommand;
+
+import java.nio.channels.SocketChannel;
+import java.lang.Enum;
 
 public class Drive extends SubsystemBase {
 
-  edu.wpi.first.wpilibj.XboxController controller;
+  UserInput input; 
 
-  Constants constants = new Constants();
-
-  private void ButtonDetection() {
-
-    try {
-
-      java.lang.Thread.sleep(30);
-
-    } catch (InterruptedException e) {
-
-      e.printStackTrace();
-
-    }
-
-    MoveForward(controller.getRightTriggerAxis());
-    MoveBackward(controller.getLeftTriggerAxis());
-    TurnLeft(controller.getLeftX());
-    TurnRight(controller.getLeftX());
-      
-    ButtonDetection();
-
+  public Drive() {
+    
+    RunLoop();
   }
 
-  public void Run() {
+  private void RunLoop() {
+    input = new UserInput();
+    while (true) {
+      input.Run();
+      if (input.isRightTriggerPressed) {
+        MoveForward(input.rightTriggerAxisValue);
+      } else if (input.isLeftTriggerPressed) {
+        MoveBackward(input.leftTriggerAxisValue);
+      }
 
-    controller = new edu.wpi.first.wpilibj.XboxController(0);
-
-    ButtonDetection();
-
+      if (input.joystickLeftDirection == "left" || input.joystickLeftDirection == "upleft" || input.joystickLeftDirection == "downleft") {
+        TurnLeft(input.joystickLeftAxisValue[0]);
+      } else if (input.joystickLeftDirection == "right" || input.joystickLeftDirection == "upright" || input.joystickLeftDirection == "downright") {
+        TurnRight(input.joystickLeftAxisValue[0]);
+      }
+    }
   }
 
   private void MoveForward(double axis) {
-    if (axis > 0) {
-      System.out.println("Right trigger's axis = " + axis);
-    }
-
+    System.out.println("Right trigger's axis = " + axis);
   }
 
   private void MoveBackward(double axis) {

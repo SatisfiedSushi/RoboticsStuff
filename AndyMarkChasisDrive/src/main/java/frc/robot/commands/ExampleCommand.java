@@ -21,6 +21,7 @@ public class ExampleCommand extends CommandBase {
     m_subsystem = subsystem;
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(subsystem);
+    //System.out.println("A button was pressed.");
   }
 
   // Called when the command is initially scheduled.
@@ -29,7 +30,9 @@ public class ExampleCommand extends CommandBase {
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
-  public void execute() {}
+  public void execute() {
+    //System.out.println("A button was pressed.");
+  }
 
   // Called once the command ends or is interrupted.
   @Override
